@@ -5,7 +5,7 @@
     <artifactId>hue</artifactId>
     <packaging>jar</packaging>
     <name>Hue</name>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <description>Hue provides jQuery style DOM traversal and manipulation.</description>
     <url>http://hue.roam.be</url>
     <licenses>
@@ -16,9 +16,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:svn:https://hue.googlecode.com/svn/tags/hue-1.0</connection>
-        <developerConnection>scm:svn:https://hue.googlecode.com/svn/tags/hue-1.0</developerConnection>
-        <url>http://code.google.com/p/hue/source/browse/tags/hue-1.0</url>
+        <connection>scm:svn:https://hue.googlecode.com/svn/trunk</connection>
+        <developerConnection>scm:svn:https://hue.googlecode.com/svn/trunk</developerConnection>
+        <url>http://code.google.com/p/hue/source/browse/</url>
     </scm>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
