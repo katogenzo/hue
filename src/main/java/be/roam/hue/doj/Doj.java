@@ -1206,8 +1206,10 @@ public abstract class Doj implements Iterable<Doj> {
                     ((HtmlTextArea) element).setText(value);
                 } else if ("select".equalsIgnoreCase(element.getTagName())) {
                     ((HtmlSelect) element).setSelectedAttribute(value, true);
+		} else if ("button".equalsIgnoreCase(element.getTagName())) {
+		    ((HtmlButton) element).setValueAttribute(value);
                 } else {
-                    element.setAttribute("value", value);
+                    ((HtmlInput) element).setValueAttribute(value);
                 }
             }
             return this;
