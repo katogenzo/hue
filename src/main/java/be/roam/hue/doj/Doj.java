@@ -407,6 +407,15 @@ public abstract class Doj implements Iterable<Doj> {
     }
 
     /**
+     * Shorthand for <code>withAttribute("value", MatchType.MATCHING, valueToContain)</code>
+     * @param valueToContain value
+     * @return new Doj instance
+     */
+    public Doj withValue(String valueToContain) {
+        return withAttribute("value", MatchType.MATCHING, valueToContain);
+    }
+
+    /**
      * Shorthand for <code>withAttribute("id", MatchType.MATCHING, valueToContain)</code>
      * @param valueToContain value
      * @return new Doj instance
