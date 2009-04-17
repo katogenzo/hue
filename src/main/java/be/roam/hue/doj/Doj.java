@@ -268,16 +268,22 @@ public abstract class Doj implements Iterable<Doj> {
     public abstract Doj getByTag(String tag);
 
     /**
-     * Returns the id of the first context element.
+     * Shorthand for <code>attribute("id")</code>.
      * @return the id of the first context element
+     * @see #attribute(java.lang.String)
      */
-    public abstract String id();
+    public String id() {
+        return attribute("id");
+    }
 
     /**
-     * Returns the ids of all context elements.
-     * @return the ids of all context elements
+     * Shorthand for <code>attribute("id")</code>.
+     * @return the id of all context elements
+     * @see #attributes(java.lang.String)
      */
-    public abstract String[] ids();
+    public String[] ids() {
+        return attributes("id");
+    }
 
     /**
      * Shorthand for <code>getByAttribute("class",
@@ -509,6 +515,60 @@ public abstract class Doj implements Iterable<Doj> {
      * @return current instance
      */
     public abstract Doj attribute(String key, String value);
+
+    /**
+     * Shorthand for <code>attribute("name")</code>.
+     * @return the value of the name attribute of the first element
+     * @see #attribute(java.lang.String)
+     */
+    public String name() {
+        return attribute("name");
+    }
+
+    /**
+     * Shorthand for <code>attributes("name")</code>.
+     * @return the value of the name attribute of the elements
+     * @see #attributes(java.lang.String)
+     */
+    public String[] names() {
+        return attributes("name");
+    }
+
+    /**
+     * Shorthand for <code>attribute("type")</code>.
+     * @return the value of the type attribute of the first element
+     * @see #attribute(java.lang.String)
+     */
+    public String type() {
+        return attribute("type");
+    }
+
+    /**
+     * Shorthand for <code>attributes("type")</code>.
+     * @return the value of the type attribute of the elements
+     * @see #attributes(java.lang.String)
+     */
+    public String[] types() {
+        return attributes("type");
+    }
+
+    /**
+     * Shorthand for <code>attribute("class")</code>.
+     * @return the value of the class attribute of the first element
+     * @see #attribute(java.lang.String)
+     */
+    public String classValue() {
+        return attribute("class");
+    }
+
+    /**
+     * Shorthand for <code>attributes("class")</code>.
+     * @return the value of the class attribute of the elements
+     * @see #attributes(java.lang.String)
+     */
+    public String[] classValues() {
+        return attributes("class");
+    }
 
     /**
      * Returns the value of the first context element for input elements
@@ -817,18 +877,6 @@ public abstract class Doj implements Iterable<Doj> {
                 list.addAll(element.getHtmlElementsByTagName(tag));
             }
             return on(list);
-        }
-
-        public String id() {
-            return firstElement().getId();
-        }
-
-        public String[] ids() {
-            String[] ids = new String[contextElements.length];
-            for (int index = 0; index < ids.length; ++index) {
-                ids[index] = contextElements[index].getId();
-            }
-            return ids;
         }
 
         public Doj getByAttribute(String attribute, MatchType matchType, String value) {
@@ -1194,14 +1242,6 @@ public abstract class Doj implements Iterable<Doj> {
 
         public boolean hasClass(String valueToContain) {
             return false;
-        }
-
-        public String id() {
-            return null;
-        }
-
-        public String[] ids() {
-            return EMPTY_STRING_ARRAY;
         }
 
         public boolean is(String tag) {
