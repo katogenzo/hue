@@ -453,6 +453,38 @@ public abstract class Doj implements Iterable<Doj> {
     }
 
     /**
+     * Shorthand for <code>hasAttribute("checked")</code>.
+     * @return true when the first element is checked
+     */
+    public boolean isChecked() {
+        return hasAttribute("checked");
+    }
+
+    /**
+     * Shorthand for <code>hasAttribute("selected")</code>.
+     * @return true when the first element is selected
+     */
+    public boolean isSelected() {
+        return hasAttribute("selected");
+    }
+
+    /**
+     * Shorthand for <code>hasAttribute("disabled")</code>.
+     * @return true when the first element is disabled
+     */
+    public boolean isDisabled() {
+        return hasAttribute("disabled");
+    }
+
+    /**
+     * Shorthand for <code>hasAttribute("readonly")</code>.
+     * @return true when the first element is readonly
+     */
+    public boolean isReadOnly() {
+        return hasAttribute("readonly");
+    }
+
+    /**
      * Returns true if one of the context elements has a value for the attribute
      * matching the given value as defined by the match type.
      * @param key key of the attribute to match
