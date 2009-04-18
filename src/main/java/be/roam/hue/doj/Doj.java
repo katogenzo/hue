@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Node;
 import static be.roam.hue.doj.MatchType.*;
@@ -296,13 +297,13 @@ public abstract class Doj implements Iterable<Doj> {
     }
 
     /**
-     * Shorthand for <code>getByAttribute(attribute, MatchType.MATCHING, value)</code>.
+     * Shorthand for <code>getByAttribute(attribute, MatchType.EQUALS, value)</code>.
      * @param attribute attribute to consider
      * @param value value to match exactly
      * @return new Doj instance
      */
     public Doj getByAttribute(String attribute, String value) {
-        return getByAttribute(attribute, MATCHING, value);
+        return getByAttribute(attribute, EQUALS, value);
     }
 
     /**
@@ -316,6 +317,28 @@ public abstract class Doj implements Iterable<Doj> {
      * @return new Doj instance
      */
     public abstract Doj getByAttribute(String attribute, MatchType matchType, String value);
+
+    /**
+     * Creates a new Doj instance containing all child elements of the current
+     * context elements for which the value given attribute matches the given
+     * pattern.
+     * @param attribute attribute to use
+     * @param pattern pattern the value of the attribute should match
+     * @return new Doj instance
+     * @see #getByAttributeMatching(java.lang.String, java.util.regex.Pattern)
+     */
+    public abstract Doj getByAttributeMatching(String attribute, String pattern);
+
+    /**
+     * Creates a new Doj instance containing all child elements of the current
+     * context elements for which the value given attribute matches the given
+     * pattern.
+     * @param attribute attribute to use
+     * @param pattern pattern the value of the attribute should match
+     * @return new Doj instance
+     * @see #getByAttributeMatching(java.lang.String, java.lang.String) 
+     */
+    public abstract Doj getByAttributeMatching(String attribute, Pattern pattern);
 
     /**
      * Returns true if at least one of the context elements has the given class.
@@ -340,13 +363,31 @@ public abstract class Doj implements Iterable<Doj> {
     public abstract Doj withTag(String tag);
 
     /**
-     * Creates a new Doj instance by only retaining the element that contain
+     * Creates a new Doj instance by only retaining the elements that contain
      * the given text, i.e.: <code>node.text().contains(textToContain)</code>
      * will return <code>true</code> for each node.
      * @param textToContain text the retained nodes should contain
      * @return new Doj instance
      */
     public abstract Doj withTextContaining(String textToContain);
+
+    /**
+     * Creates a new Doj instance by only retaining the elements that contain
+     * text matching the given pattern.
+     * @param pattern the pattern to match
+     * @return new Doj instance
+     * @see #withTextMatching(java.util.regex.Pattern)
+     */
+    public abstract Doj withTextMatching(String pattern);
+
+    /**
+     * Creates a new Doj instance by only retaining the elements that contain
+     * text matching the given pattern.
+     * @param pattern the pattern to match
+     * @return new Doj instance
+     * @see #withTextMatching(java.lang.String) 
+     */
+    public abstract Doj withTextMatching(Pattern pattern);
 
     /**
      * Shorthand for <code>withAttribute(key, MatchType.EXISTING, someValueOrEvenNull)</code>
@@ -368,14 +409,34 @@ public abstract class Doj implements Iterable<Doj> {
     }
 
     /**
-     * Shorthand for <code>withAttribute(key, MatchType.MATCHING, someValueOrEvenNull)</code>
+     * Shorthand for <code>withAttribute(key, MatchType.EQUALS, someValueOrEvenNull)</code>
      * @param key key to consider
      * @param value value value to match exactly
      * @return new Doj instance
      */
     public Doj withAttribute(String key, String value) {
-        return withAttribute(key, MATCHING, value);
+        return withAttribute(key, EQUALS, value);
     }
+
+    /**
+     * Creates a new Doj instance retaining only the context elements with the
+     * given attribute matching the pattern.
+     * @param key key of the attribute
+     * @param pattern pattern the value of the attribute should match
+     * @return new Doj instance
+     * @see #withAttributeMatching(java.lang.String, java.util.regex.Pattern)
+     */
+    public abstract Doj withAttributeMatching(String key, String pattern);
+
+    /**
+     * Creates a new Doj instance retaining only the context elements with the
+     * given attribute matching the pattern.
+     * @param key key of the attribute
+     * @param pattern pattern the value of the attribute should match
+     * @return new Doj instance
+     * @see #withAttributeMatching(java.lang.String, java.lang.String) 
+     */
+    public abstract Doj withAttributeMatching(String key, Pattern pattern);
 
     /**
      * Creates a new Doj instance containing all context elements with the
@@ -407,25 +468,25 @@ public abstract class Doj implements Iterable<Doj> {
     }
 
     /**
-     * Shorthand for <code>withAttribute("value", MatchType.MATCHING, valueToContain)</code>
+     * Shorthand for <code>withAttribute("value", MatchType.EQUALS, valueToContain)</code>
      * @param valueToContain value
      * @return new Doj instance
      */
     public Doj withValue(String valueToContain) {
-        return withAttribute("value", MatchType.MATCHING, valueToContain);
+        return withAttribute("value", MatchType.EQUALS, valueToContain);
     }
 
     /**
-     * Shorthand for <code>withAttribute("id", MatchType.MATCHING, valueToContain)</code>
+     * Shorthand for <code>withAttribute("id", MatchType.EQUALS, valueToContain)</code>
      * @param valueToContain value
      * @return new Doj instance
      */
     public Doj withId(String valueToContain) {
-        return withAttribute("id", MatchType.MATCHING, valueToContain);
+        return withAttribute("id", MatchType.EQUALS, valueToContain);
     }
 
     /**
-     * Shorthand for <code>withAttribute("type", MatchType.MATCHING, valueToContain)</code>
+     * Shorthand for <code>withAttribute("type", MatchType.EQUALS, valueToContain)</code>
      * @param type type to match
      * @return new Doj instance
      */
@@ -434,7 +495,7 @@ public abstract class Doj implements Iterable<Doj> {
     }
 
     /**
-     * Shorthand for <code>withAttribute("name", MatchType.MATCHING, valueToContain)</code>
+     * Shorthand for <code>withAttribute("name", MatchType.EQUALS, valueToContain)</code>
      * @param name name to match
      * @return new Doj instance
      */
@@ -452,13 +513,13 @@ public abstract class Doj implements Iterable<Doj> {
     }
 
     /**
-     * Shorthand for <code>hasAttribute(key, MatchType.MATCHING, value)</code>
+     * Shorthand for <code>hasAttribute(key, MatchType.EQUALS, value)</code>
      * @param key of the attribute
      * @param value value to match
      * @return new Doj instance
      */
     public boolean hasAttribute(String key, String value) {
-        return hasAttribute(key, MatchType.MATCHING, value);
+        return hasAttribute(key, MatchType.EQUALS, value);
     }
 
     /**
@@ -1206,8 +1267,8 @@ public abstract class Doj implements Iterable<Doj> {
                     ((HtmlTextArea) element).setText(value);
                 } else if ("select".equalsIgnoreCase(element.getTagName())) {
                     ((HtmlSelect) element).setSelectedAttribute(value, true);
-		} else if ("button".equalsIgnoreCase(element.getTagName())) {
-		    ((HtmlButton) element).setValueAttribute(value);
+                } else if ("button".equalsIgnoreCase(element.getTagName())) {
+                    ((HtmlButton) element).setValueAttribute(value);
                 } else {
                     ((HtmlInput) element).setValueAttribute(value);
                 }
@@ -1224,6 +1285,51 @@ public abstract class Doj implements Iterable<Doj> {
                 }
             }
             return on(retained);
+        }
+
+        public Doj withTextMatching(String pattern) {
+            return withTextMatching(Pattern.compile(pattern));
+        }
+
+        public Doj withTextMatching(Pattern pattern) {
+            List<HtmlElement> retained = new ArrayList<HtmlElement>();
+            for (HtmlElement element : contextElements) {
+                String text = element.asText();
+                if (text != null && pattern.matcher(text).matches()) {
+                    retained.add(element);
+                }
+            }
+            return on(retained);
+        }
+
+        public Doj withAttributeMatching(String key, String pattern) {
+            return withAttributeMatching(key, Pattern.compile(pattern));
+        }
+        
+        public Doj withAttributeMatching(String key, Pattern pattern) {
+            List<HtmlElement> list = new ArrayList<HtmlElement>();
+            for (HtmlElement element : contextElements) {
+                if (pattern.matcher(element.getAttribute(key)).matches()) {
+                    list.add(element);
+                }
+            }
+            return on(list);
+        }
+
+        public Doj getByAttributeMatching(String attribute, String pattern) {
+            return getByAttributeMatching(attribute, Pattern.compile(pattern));
+        }
+
+        public Doj getByAttributeMatching(String attribute, Pattern pattern) {
+            List<HtmlElement> list = new ArrayList<HtmlElement>();
+            for (HtmlElement element : contextElements) {
+                for (HtmlElement child : element.getAllHtmlChildElements()) {
+                    if (pattern.matcher(child.getAttribute(attribute)).matches()) {
+                        list.add(child);
+                    }
+                }
+            }
+            return on(list);
         }
     }
 
@@ -1378,12 +1484,36 @@ public abstract class Doj implements Iterable<Doj> {
         public Doj verifyNotEmpty() throws DojIsEmptyException {
             throw new DojIsEmptyException();
         }
-        
+
         public Doj value(String value) {
             return this;
         }
 
         public Doj withTextContaining(String textToContain) {
+            return this;
+        }
+
+        public Doj withTextMatching(String pattern) {
+            return this;
+        }
+
+        public Doj withTextMatching(Pattern pattern) {
+            return this;
+        }
+
+        public Doj withAttributeMatching(String key, String pattern) {
+            return this;
+        }
+
+        public Doj withAttributeMatching(String key, Pattern pattern) {
+            return this;
+        }
+
+        public Doj getByAttributeMatching(String attribute, String pattern) {
+            return this;
+        }
+
+        public Doj getByAttributeMatching(String attribute, Pattern pattern) {
             return this;
         }
     }

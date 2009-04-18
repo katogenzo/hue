@@ -25,10 +25,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Test for {@link Doj).
+ * Test for {@link Doj), API version 1.0.
  * @author Kevin Wetzels
  */
-public class DojTest {
+public class DojTestVersion1Dot0 {
 
     private static HtmlPage page;
     private static Doj onPage;
@@ -184,8 +184,8 @@ public class DojTest {
 
     @Test
     public void getByAttribute_Matching() {
-        assertEquals(1, onPage.getByAttribute("class", MatchType.MATCHING, "ol-simple").size());
-        assertTrue(onPage.getByAttribute("class", MatchType.MATCHING, "ol").isEmpty());
+        assertEquals(1, onPage.getByAttribute("class", MatchType.EQUALS, "ol-simple").size());
+        assertTrue(onPage.getByAttribute("class", MatchType.EQUALS, "ol").isEmpty());
     }
 
     @Test
@@ -264,9 +264,9 @@ public class DojTest {
     @Test
     public void withAttribute_Matching() {
         // Now the HTML element is part of the context
-        assertEquals(1, onPage.withAttribute("lang", MatchType.MATCHING, "en-US").size());
-        assertEquals(3, onPage.get("div.article div").withAttribute("class", MatchType.MATCHING, "content").size());
-        assertEquals(0, onPage.get("div.article div").withAttribute("class", MatchType.MATCHING, " content").size());
+        assertEquals(1, onPage.withAttribute("lang", MatchType.EQUALS, "en-US").size());
+        assertEquals(3, onPage.get("div.article div").withAttribute("class", MatchType.EQUALS, "content").size());
+        assertEquals(0, onPage.get("div.article div").withAttribute("class", MatchType.EQUALS, " content").size());
     }
 
     @Test
@@ -354,9 +354,9 @@ public class DojTest {
     @Test
     public void hasAttribute_Matching() {
         Doj doj = onPage.get(".article");
-        assertTrue(doj.hasAttribute("class", MatchType.MATCHING, "article"));
-        assertFalse(doj.hasAttribute("class", MatchType.MATCHING, " article"));
-        assertTrue(onPage.get("div").hasAttribute("class", MatchType.MATCHING, "col-2"));
+        assertTrue(doj.hasAttribute("class", MatchType.EQUALS, "article"));
+        assertFalse(doj.hasAttribute("class", MatchType.EQUALS, " article"));
+        assertTrue(onPage.get("div").hasAttribute("class", MatchType.EQUALS, "col-2"));
     }
 
     @Test
@@ -605,7 +605,7 @@ public class DojTest {
     @BeforeClass
     public static void beforeClass() throws Exception {
         WebClient client = new WebClient(BrowserVersion.FIREFOX_3);
-        page = client.getPage(DojTest.class.getResource("/test.html"));
+        page = client.getPage(DojTestVersion1Dot0.class.getResource("/test.html"));
         onPage = Doj.on(page);
     }
 }

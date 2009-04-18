@@ -32,7 +32,7 @@ public enum MatchType {
         
     },
     
-    MATCHING() {
+    EQUALS() {
 
         @Override
         public boolean isMatch(String value, String valueToLookFor) {
