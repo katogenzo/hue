@@ -51,8 +51,20 @@ public class DojCssSelectorTest {
         assertMatch("blockquote#the_id.the_class p.last.wow.oh-yeah a", "blockquote", "#the_id", ".the_class", " ", "p", ".last", ".wow", ".oh-yeah", " ", "a");
     }
 
+    @Test
+    public void withGroup() {
+        final String groupedSelector = "blockquote#the_id.the_class p.last.wow.oh-yeah a  , div.totally p.rocks.your, div#socks a.off";
+        assertMatch(groupedSelector, 0, "blockquote", "#the_id", ".the_class", " ", "p", ".last", ".wow", ".oh-yeah", " ", "a");
+        assertMatch(groupedSelector, 1, "div", ".totally", " ", "p", ".rocks", ".your");
+        assertMatch(groupedSelector, 2, "div", "#socks", " ", "a", ".off");
+    }
+
     protected void assertMatch(String selectorUnderTest, String... expectedSelectors) {
-        assertMatch(new DojCssSelector().compile(selectorUnderTest), expectedSelectors);
+        assertMatch(selectorUnderTest, 0, expectedSelectors);
+    }
+
+    protected void assertMatch(String selectorUnderTest, int index, String... expectedSelectors) {
+        assertMatch(new DojCssSelector().compile(selectorUnderTest).get(index), expectedSelectors);
     }
 
     protected void assertMatch(List<DojCssSelector> selectors, String... expectedSelectors) {

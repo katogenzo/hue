@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
  * Test for {@link Doj), API version 1.0.
  * @author Kevin Wetzels
  */
-public class DojTestVersion1Dot1 {
+public class DojVersion1Dot1Test {
 
     private static HtmlPage page;
     private static Doj onPage;
@@ -64,10 +64,16 @@ public class DojTestVersion1Dot1 {
         assertTrue(onPage.getByAttributeMatching("class", Pattern.compile(pattern)).isEmpty());
     }
 
+    @Test
+    public void get_withGroupedSelectors() {
+        assertEquals(3, onPage.get("#header  , #sidebar, #footer").size());
+        assertEquals(5 + 1 + 1 + 0, onPage.get("div ol  , #sidebar   , blockquote,bdo").size());
+    }
+
     @BeforeClass
     public static void beforeClass() throws Exception {
         WebClient client = new WebClient(BrowserVersion.FIREFOX_3);
-        page = client.getPage(DojTestVersion1Dot0.class.getResource("/test.html"));
+        page = client.getPage(DojVersion1Dot0Test.class.getResource("/test.html"));
         onPage = Doj.on(page);
     }
 

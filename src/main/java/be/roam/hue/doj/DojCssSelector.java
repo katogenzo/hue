@@ -54,8 +54,24 @@ public class DojCssSelector {
     public String getValue() {
         return value;
     }
+
+    public List<List<DojCssSelector>> compile(String groupSelector) {
+        List<List<DojCssSelector>> result = new ArrayList<List<DojCssSelector>>();
+        String[] parts = groupSelector.split(",");
+        for (String part : parts) {
+            part = part.trim();
+            if (StringUtils.isBlank(part)) {
+                continue;
+            }
+            List<DojCssSelector> compiled = compileSingle(part);
+            if (!compiled.isEmpty()) {
+                result.add(compiled);
+            }
+        }
+        return result;
+    }
     
-    public List<DojCssSelector> compile(String selector) {
+    public List<DojCssSelector> compileSingle(String selector) {
         List<DojCssSelector> result = new ArrayList<DojCssSelector>();
         String[] parts = selector.split("\\s");
         boolean first = true;

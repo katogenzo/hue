@@ -28,7 +28,7 @@ import org.junit.Test;
  * Test for {@link Doj), API version 1.0.
  * @author Kevin Wetzels
  */
-public class DojTestVersion1Dot0 {
+public class DojVersion1Dot0Test {
 
     private static HtmlPage page;
     private static Doj onPage;
@@ -605,7 +605,7 @@ public class DojTestVersion1Dot0 {
     @BeforeClass
     public static void beforeClass() throws Exception {
         WebClient client = new WebClient(BrowserVersion.FIREFOX_3);
-        page = client.getPage(DojTestVersion1Dot0.class.getResource("/test.html"));
+        page = client.getPage(DojVersion1Dot0Test.class.getResource("/test.html"));
         onPage = Doj.on(page);
     }
 }

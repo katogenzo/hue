@@ -136,6 +136,23 @@ public abstract class Doj implements Iterable<Doj> {
     public abstract Doj remove(int index);
 
     /**
+     * Merges the Doj instance with the current instance to create a new
+     * Doj instance containing the context elements of both.
+     * @param doj doj to merge with this one
+     * @return new Doj instance
+     */
+    public Doj merge(Doj doj) {
+        List<HtmlElement> result = new ArrayList<HtmlElement>();
+        for (HtmlElement element : allElements()) {
+            result.add(element);
+        }
+        for (HtmlElement element : doj.allElements()) {
+            result.add(element);
+        }
+        return on(result);
+    }
+
+    /**
      * Creates a new Doj instance consisting of the children of the context
      * that have the given id.
      * <p>
@@ -932,18 +949,22 @@ public abstract class Doj implements Iterable<Doj> {
         }
 
         public Doj get(String selectorString) {
-            List<DojCssSelector> selectorList = new DojCssSelector().compile(selectorString);
-            Doj doj = this;
-            boolean descend = true;
-            for (DojCssSelector selector : selectorList) {
-                if (selector.getType() == DojCssSelector.Type.DESCENDANT) {
-                    descend = true;
-                } else {
-                    doj = applySimpleSelector(selector, doj, descend);
-                    descend = false;
+            List<List<DojCssSelector>> selectorList = new DojCssSelector().compile(selectorString);
+            Doj all = EMPTY;
+            for (List<DojCssSelector> selectors : selectorList) {
+                Doj doj = this;
+                boolean descend = true;
+                for (DojCssSelector selector : selectors) {
+                    if (selector.getType() == DojCssSelector.Type.DESCENDANT) {
+                        descend = true;
+                    } else {
+                        doj = applySimpleSelector(selector, doj, descend);
+                        descend = false;
+                    }
                 }
+                all = all.merge(doj);
             }
-            return doj;
+            return all;
         }
 
         protected Doj applySimpleSelector(DojCssSelector selector, Doj doj, boolean descend) {
@@ -1305,7 +1326,7 @@ public abstract class Doj implements Iterable<Doj> {
         public Doj withAttributeMatching(String key, String pattern) {
             return withAttributeMatching(key, Pattern.compile(pattern));
         }
-        
+
         public Doj withAttributeMatching(String key, Pattern pattern) {
             List<HtmlElement> list = new ArrayList<HtmlElement>();
             for (HtmlElement element : contextElements) {
