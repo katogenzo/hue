@@ -261,6 +261,9 @@ public abstract class Doj implements Iterable<Doj> {
      * selector such as "div.article p#someid", remember that HtmlUnit will
      * look for the element with the given id anywhere on the page, not
      * just within divs with class "article".</dd>
+     * <dt>grouped selectors</dt>
+     * <dd>pass "p, div, a.someClass" to matches all paragraphs, divs and anchors
+     * (with class "someClass")</dd>
      * </dl>
      * @param selector selector to use to match elements
      * @return new Doj instance
