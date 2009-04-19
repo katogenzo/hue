@@ -700,7 +700,7 @@ public abstract class Doj implements Iterable<Doj> {
      * </p>
      * <p>
      * <strong>Note:</strong> use {@link #values()} if you want all selected
-     * options of a multiple select o if you want the values of all context
+     * options of a multiple select or if you want the values of all context
      * elements.
      * </p>
      * @return value of the first context element

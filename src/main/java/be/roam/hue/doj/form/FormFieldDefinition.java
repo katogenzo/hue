@@ -25,4 +25,5 @@ public interface FormFieldDefinition {
     String getHtmlName();
 
     FormFieldType getType();
+
 }

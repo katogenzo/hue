@@ -119,20 +119,57 @@ public abstract class DojForm<Field extends FormFieldDefinition> {
         return true;
     }
 
+    /**
+     * Returns the value of the field.
+     * <p>
+     * In the case of radiobuttons, checkboxes and selects, the value of the
+     * selected option is returned.
+     * </p>
+     * @param field field to retrieve the value for
+     * @return the value of the field or null if no value is selected in the
+     * case of radiobuttons, checkboxes and selects
+     */
     public String value(Field field) {
-        // TODO Return the selected value
+        Doj doj = get(field);
+        FormFieldType type = field.getType();
+        if (type == FormFieldType.RADIOBUTTON || type == FormFieldType.CHECKBOX) {
+            for (Doj input : doj) {
+                if (input.isChecked()) {
+                    return input.value();
+                }
+            }
+            return null;
+        }
         return get(field).value();
     }
 
+    /**
+     * Returns the values of the matching fields.
+     * <p>
+     * In the case of radiobuttons and single selects, all values are returned.
+     * In the case of multiple selects and checkboxes, all selected options are
+     * returned.
+     * </p>
+     * @param field field to retrieve the values for
+     * @return the values of the field
+     */
     public String[] values(Field field) {
+        // TODO
         return get(field).values();
     }
 
-    public Doj get(Field field) {
-        return get(field.getHtmlName());
+    public DojForm value(Field field, String... value) {
+        // TODO
+        return this;
     }
 
-    public Doj get(String name) {
-        return formElements.withName(name);
+    /**
+     * Retrieves the Doj instance containing the matching fields.
+     * @param field field to match
+     * @return Doj instance containing the matched fields
+     */
+    public Doj get(Field field) {
+        return formElements.withName(field.getHtmlName());
     }
+    
 }
