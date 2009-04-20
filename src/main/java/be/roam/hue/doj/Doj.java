@@ -839,7 +839,7 @@ public abstract class Doj implements Iterable<Doj> {
      * @param contextElements the context elements to use
      * @return new Doj instance
      */
-    public static Doj on(Collection<HtmlElement> contextElements) {
+    public static Doj on(Collection<? extends HtmlElement> contextElements) {
         return (contextElements == null || contextElements.isEmpty() ? EMPTY : new NonEmptyDoj(contextElements).unique());
     }
 
@@ -1188,7 +1188,7 @@ public abstract class Doj implements Iterable<Doj> {
             this.contextElements = contextElements;
         }
 
-        public NonEmptyDoj(Collection<HtmlElement> contextElements) {
+        public NonEmptyDoj(Collection<? extends HtmlElement> contextElements) {
             this.contextElements = new HtmlElement[contextElements.size()];
             int index = -1;
             for (HtmlElement element : contextElements) {
