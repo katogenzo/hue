@@ -75,7 +75,6 @@ public class PropertyEvaluator {
             int start = matcher.start(1);
             int end = matcher.end(1);
             String key = stringValue.substring(start, end);
-            System.out.println("Looking for value of " + key);
             Object object = values.get(key);
             matcher.appendReplacement(buffer, object == null ? "" : object.toString());
         }
