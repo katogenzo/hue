@@ -17,13 +17,14 @@ package be.roam.hue.doj;
 
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.html.ClickableElement;
 import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlButton;
+import com.gargoylesoftware.htmlunit.html.HtmlCheckBoxInput;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlOption;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlRadioButtonInput;
 import com.gargoylesoftware.htmlunit.html.HtmlSelect;
 import com.gargoylesoftware.htmlunit.html.HtmlTextArea;
 import java.io.IOException;
@@ -373,6 +374,30 @@ public abstract class Doj implements Iterable<Doj> {
      * @return true if at least one of the context elements matches the tag
      */
     public abstract boolean is(String tag);
+
+    /**
+     * Checks the radiobuttons and checkboxes in the current context.
+     * @return page resulting from checking the first input
+     */
+    public abstract Page check();
+
+    /**
+     * Unchecks the radiobuttons and checkboxes in the current context.
+     * @return page resulting from unchecking the first input
+     */
+    public abstract Page uncheck();
+
+    /**
+     * Selects the options in the current context.
+     * @return page resulting from selecting the first option
+     */
+    public abstract Page select();
+
+    /**
+     * Deselects the options in the current context.
+     * @return page resulting from deselecting the first option
+     */
+    public abstract Page deselect();
 
     /**
      * Creates a new Doj instance by only retaining the elements that match
@@ -1143,7 +1168,7 @@ public abstract class Doj implements Iterable<Doj> {
         }
 
         public Page click() throws IOException, ClassCastException {
-            return ((ClickableElement) firstElement()).click();
+            return firstElement().click();
         }
 
         public int size() {
@@ -1355,6 +1380,53 @@ public abstract class Doj implements Iterable<Doj> {
             }
             return on(list);
         }
+
+        public Page check() {
+            return check(true);
+        }
+
+        public Page uncheck() {
+            return check(false);
+        }
+
+        protected Page check(boolean toCheck) {
+            Page page = null;
+            Doj matches = this.withType("radio");
+            for (HtmlElement radiobutton : matches.allElements()) {
+                Page temp = ((HtmlRadioButtonInput) radiobutton).setChecked(toCheck);
+                if (page == null) {
+                    page = temp;
+                }
+            }
+            matches = this.withType("checkbox");
+            for (HtmlElement checkbox : matches.allElements()) {
+                Page temp = ((HtmlCheckBoxInput) checkbox).setChecked(toCheck);
+                if (page == null) {
+                    page = temp;
+                }
+            }
+            return page;
+        }
+
+        public Page select() {
+            return select(true);
+        }
+
+        public Page deselect() {
+            return select(false);
+        }
+
+        protected Page select(boolean toSelect) {
+            Page page = null;
+            Doj matches = this.withTag("option");
+            for (HtmlElement option : matches.allElements()) {
+                Page temp = ((HtmlOption) option).setSelected(toSelect);
+                if (page == null) {
+                    page = temp;
+                }
+            }
+            return page;
+        }
     }
 
     /**
@@ -1539,6 +1611,22 @@ public abstract class Doj implements Iterable<Doj> {
 
         public Doj getByAttributeMatching(String attribute, Pattern pattern) {
             return this;
+        }
+
+        public Page check() {
+            return null;
+        }
+
+        public Page uncheck() {
+            return null;
+        }
+
+        public Page select() {
+            return null;
+        }
+
+        public Page deselect() {
+            return null;
         }
     }
 

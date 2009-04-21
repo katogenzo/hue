@@ -18,13 +18,21 @@ package be.roam.hue.doj.form;
 
 import be.roam.hue.doj.Doj;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 /**
  * Base class for manipulating forms.
+ * <p>
+ * This type heavily interacts with {@link FormFieldDefinition} to strictly
+ * define the possible operations. To make full use of this class, define an
+ * enum implementing <code>FormFieldDefinition</code> containing the form
+ * fields.
+ * </p>
  * @author Kevin Wetzels
  */
-public abstract class DojForm<Field extends FormFieldDefinition> {
+public class DojForm<Field extends FormFieldDefinition> {
 
     /**
      * The root object of the form - should be something like Doj.on("form#form_id")
@@ -67,6 +75,15 @@ public abstract class DojForm<Field extends FormFieldDefinition> {
     }
 
     /**
+     * Shorthand for <code>hasLabel(field.getHtmlName())</code>.
+     * @param field field to find a label for
+     * @return true when it does have a label
+     */
+    public boolean hasLabel(Field field) {
+        return hasLabel(field.getHtmlName());
+    }
+
+    /**
      * Checks if the form element with the given name has an associated label
      * (i.e. the form element has an id and the value of a label's for attribute
      * is set to that id).
@@ -78,6 +95,15 @@ public abstract class DojForm<Field extends FormFieldDefinition> {
     }
 
     /**
+     * Shorthand for <code>label(field.getHtmlName())</code>.
+     * @param field field to find the label for
+     * @return Doj instance containing the label
+     */
+    public Doj label(Field field) {
+        return label(field.getHtmlName());
+    }
+
+    /**
      * Returns a Doj instance containing the label for the form element with the
      * given name or empty Doj when no such label exists.
      * @param name name of the form element
@@ -85,16 +111,17 @@ public abstract class DojForm<Field extends FormFieldDefinition> {
      */
     public Doj label(String name) {
         String[] ids = formElements.withName(name).ids();
+        Doj label = Doj.EMPTY;
         for (String id : ids) {
             if (StringUtils.isBlank(id)) {
                 continue;
             }
-            Doj label = root.get("label").withAttribute("for", id);
-            if (!label.isEmpty()) {
-                return label;
+            Doj temp = root.get("label").withAttribute("for", id);
+            if (!temp.isEmpty()) {
+                label = label.merge(temp);
             }
         }
-        return Doj.EMPTY;
+        return label;
     }
 
     /**
@@ -116,6 +143,9 @@ public abstract class DojForm<Field extends FormFieldDefinition> {
         if (type == FormFieldType.MULTI_SELECT) {
             return element.hasAttribute("multiple");
         }
+        if (type == FormFieldType.SELECT) {
+            return !element.hasAttribute("multiple");
+        }
         return true;
     }
 
@@ -123,7 +153,7 @@ public abstract class DojForm<Field extends FormFieldDefinition> {
      * Returns the value of the field.
      * <p>
      * In the case of radiobuttons, checkboxes and selects, the value of the
-     * selected option is returned.
+     * first selected option is returned.
      * </p>
      * @param field field to retrieve the value for
      * @return the value of the field or null if no value is selected in the
@@ -154,12 +184,96 @@ public abstract class DojForm<Field extends FormFieldDefinition> {
      * @return the values of the field
      */
     public String[] values(Field field) {
-        // TODO
-        return get(field).values();
+        Doj doj = get(field);
+        FormFieldType type = field.getType();
+        if (type != FormFieldType.CHECKBOX && type != FormFieldType.MULTI_SELECT) {
+            return doj.values();
+        }
+        List<String> selectedValues = new ArrayList<String>();
+        doj = (type == FormFieldType.CHECKBOX ? doj.with("checked") : doj.get("option").with("selected"));
+        for (Doj selected : doj) {
+            selectedValues.add(selected.value());
+        }
+        return selectedValues.toArray(new String[selectedValues.size()]);
     }
 
-    public DojForm value(Field field, String... value) {
-        // TODO
+    /**
+     * Sets the value for the given fields.
+     * <p>
+     * In the case of most fields, the value attribute is set to the
+     * given value. In the case of textareas, the content is set to the given
+     * value.
+     * </p>
+     * @param field field to set the value for
+     * @param value value to set
+     * @return current instance
+     */
+    public DojForm value(Field field, String value) {
+        get(field).value(value);
+        return this;
+    }
+
+    /**
+     * Selects the option with the given value.
+     * @param field the select
+     * @param valueOfOptionToSelect the value of the option to select
+     * @return current instance
+     */
+    public DojForm select(Field field, String valueOfOptionToSelect) {
+        get(field).get("option").withValue(valueOfOptionToSelect).select();
+        return this;
+    }
+
+    /**
+     * Deselects the option with the given value.
+     * @param field the select
+     * @param valueOfOptionToSelect the value of the option to deselect
+     * @return current instance
+     */
+    public DojForm deselect(Field field, String valueOfOptionToSelect) {
+        get(field).get("option").withValue(valueOfOptionToSelect).deselect();
+        return this;
+    }
+
+    /**
+     * Checks the given field.
+     * @param field field to check
+     * @return current instance
+     */
+    public DojForm check(Field field) {
+        get(field).check();
+        return this;
+    }
+
+    /**
+     * Unchecks the given field.
+     * @param field field to uncheck
+     * @return current instance
+     */
+    public DojForm uncheck(Field field) {
+        get(field).uncheck();
+        return this;
+    }
+
+    /**
+     * Checks the given field with the given value.
+     * @param field field to check
+     * @param value value of the field to match
+     * @return current instance
+     */
+    public DojForm check(Field field, String value) {
+        get(field).withValue(value).check();
+        return this;
+    }
+
+    /**
+     * Unchecks the given field with the given value.
+     * @param field field to uncheck
+     * @param value value of the field to match
+     * @return current instance
+     */
+    public DojForm uncheck(Field field, String value) {
+        get(field).withValue(value).check();
         return this;
     }
 
@@ -171,5 +285,4 @@ public abstract class DojForm<Field extends FormFieldDefinition> {
     public Doj get(Field field) {
         return formElements.withName(field.getHtmlName());
     }
-    
 }

@@ -70,10 +70,97 @@ public class DojVersion1Dot1Test {
         assertEquals(5 + 1 + 1 + 0, onPage.get("div ol  , #sidebar   , blockquote,bdo").size());
     }
 
+    @Test
+    public void check() {
+        assertTrue(onPage.get("#checker2").isChecked());
+        onPage.get("#checker2").check();
+        assertTrue(onPage.get("#checker2").isChecked());
+        assertFalse(onPage.get("#checker1").isChecked());
+        onPage.get("#checker1").check();
+        assertTrue(onPage.get("#checker1").isChecked());
+        onPage.get("#checker1").uncheck();
+
+        assertTrue(onPage.get("input").withName("site").withValue("google").isChecked());
+        onPage.get("input").withName("site").withValue("google").check();
+        assertTrue(onPage.get("input").withName("site").withValue("google").isChecked());
+        assertFalse(onPage.get("input").withName("site").withValue("thisone").isChecked());
+        onPage.get("input").withName("site").withValue("thisone").check();
+        assertTrue(onPage.get("input").withName("site").withValue("thisone").isChecked());
+        onPage.get("input").withName("site").withValue("google").check();
+    }
+
+    @Test
+    public void uncheck() {
+        assertTrue(onPage.get("#checker2").isChecked());
+        onPage.get("#checker2").uncheck();
+        assertFalse(onPage.get("#checker2").isChecked());
+        assertFalse(onPage.get("#checker1").isChecked());
+        onPage.get("#checker1").uncheck();
+        assertFalse(onPage.get("#checker1").isChecked());
+        onPage.get("#checker2").check();
+
+        assertTrue(onPage.get("input").withName("site").withValue("google").isChecked());
+        onPage.get("input").withName("site").withValue("google").uncheck();
+        assertFalse(onPage.get("input").withName("site").withValue("google").isChecked());
+        assertFalse(onPage.get("input").withName("site").withValue("thisone").isChecked());
+        onPage.get("input").withName("site").withValue("thisone").uncheck();
+        assertFalse(onPage.get("input").withName("site").withValue("thisone").isChecked());
+        onPage.get("input").withName("site").withValue("google").check();
+    }
+
+    @Test
+    public void select() {
+        assertTrue(onPage.get("#the_plain_select option").withValue("4").isSelected());
+        onPage.get("#the_plain_select option").withValue("2").select();
+        assertTrue(onPage.get("#the_plain_select option").withValue("2").isSelected());
+        assertFalse(onPage.get("#the_plain_select option").withValue("4").isSelected());
+        onPage.get("#the_plain_select option").withValue("4").select();
+
+        assertTrue(onPage.get("#the_multiple_select option").withValue("4").isSelected());
+        onPage.get("#the_multiple_select option").withValue("1").select();
+        assertTrue(onPage.get("#the_multiple_select option").withValue("1").isSelected());
+        assertTrue(onPage.get("#the_multiple_select option").withValue("4").isSelected());
+        onPage.get("#the_multiple_select option").withValue("1").deselect();
+
+        onPage.get("#the_plain_select option, #the_multiple_select option").select();
+        Doj plain = onPage.get("#the_plain_select option");
+        int index = 0;
+        for (Doj option : plain) {
+            if (++index == plain.size()) {
+                assertTrue(option.isSelected());
+            } else {
+                assertFalse(option.isSelected());
+            }
+        }
+        Doj multiple = onPage.get("#the_multiple_select option");
+        index = 0;
+        for (Doj option : multiple) {
+            ++index;
+            assertTrue(option.isSelected());
+            if (index == 2 || index == 4) {
+                option.select();
+            }
+        }
+    }
+
+    @Test
+    public void deselect() {
+        assertTrue(onPage.get("#the_plain_select option").withValue("4").isSelected());
+        onPage.get("#the_plain_select option").withValue("4").deselect();
+        assertFalse(onPage.get("#the_plain_select option").withValue("4").isSelected());
+        onPage.get("#the_plain_select option").withValue("4").select();
+
+        assertTrue(onPage.get("#the_multiple_select option").withValue("4").isSelected());
+        onPage.get("#the_multiple_select option").withValue("4").deselect();
+        assertTrue(onPage.get("#the_multiple_select option").withValue("2").isSelected());
+        assertFalse(onPage.get("#the_multiple_select option").withValue("4").isSelected());
+        onPage.get("#the_multiple_select option").withValue("4").select();
+    }
+
     @BeforeClass
     public static void beforeClass() throws Exception {
         WebClient client = new WebClient(BrowserVersion.FIREFOX_3);
-        page = client.getPage(DojVersion1Dot0Test.class.getResource("/test.html"));
+        page = client.getPage(DojVersion1Dot1Test.class.getResource("/test.html"));
         onPage = Doj.on(page);
     }
 
