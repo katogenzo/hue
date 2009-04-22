@@ -109,7 +109,8 @@ public class DojVersion1Dot1Test {
     }
 
     @Test
-    public void select() {
+    public void select() throws Exception {
+	beforeClass();
         assertTrue(onPage.get("#the_plain_select option").withValue("4").isSelected());
         onPage.get("#the_plain_select option").withValue("2").select();
         assertTrue(onPage.get("#the_plain_select option").withValue("2").isSelected());
@@ -144,7 +145,8 @@ public class DojVersion1Dot1Test {
     }
 
     @Test
-    public void deselect() {
+    public void deselect() throws Exception {
+	beforeClass();
         assertTrue(onPage.get("#the_plain_select option").withValue("4").isSelected());
         onPage.get("#the_plain_select option").withValue("4").deselect();
         assertFalse(onPage.get("#the_plain_select option").withValue("4").isSelected());
