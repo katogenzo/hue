@@ -161,7 +161,7 @@ public class DojVersion1Dot1Test {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        WebClient client = new WebClient(BrowserVersion.FIREFOX_3);
+        WebClient client = new WebClient(BrowserVersion.FIREFOX_24);
         page = client.getPage(DojVersion1Dot1Test.class.getResource("/test.html"));
         onPage = Doj.on(page);
     }

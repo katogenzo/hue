@@ -456,7 +456,7 @@ public class DojVersion1Dot0Test {
 
     @Test
     public void attribute_set() {
-        HtmlElement element = page.getElementById("header");
+        HtmlElement element = page.getHtmlElementById("header");
         Doj doj = Doj.on(element);
         assertEquals("header", element.getId());
         assertEquals("header", doj.id());
@@ -604,7 +604,7 @@ public class DojVersion1Dot0Test {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        WebClient client = new WebClient(BrowserVersion.FIREFOX_3);
+        WebClient client = new WebClient(BrowserVersion.FIREFOX_24);
         page = client.getPage(DojVersion1Dot0Test.class.getResource("/test.html"));
         onPage = Doj.on(page);
     }

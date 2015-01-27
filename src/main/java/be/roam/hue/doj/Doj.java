@@ -158,7 +158,7 @@ public abstract class Doj implements Iterable<Doj> {
      * that have the given id.
      * <p>
      * <strong>Note:</strong> due to HtmlUnit's implementation of
-     * {@link HtmlElement#getElementById(java.lang.String)}, this will not look
+     * {@link HtmlPage#getElementById(java.lang.String)}, this will not look
      * for the element with the given id as a descendant of the context
      * elements, but for the element with the given id. For instance:
      * <code>Doj.on(page).getById("header").getById("header").size()</code>
@@ -836,7 +836,7 @@ public abstract class Doj implements Iterable<Doj> {
     /**
      * Throws an exception when the Doj instance is empty.
      * @return the current Doj instance
-     * @throws DojHasNoNodesException
+     * @throws DojIsEmptyException
      */
     public abstract Doj verifyNotEmpty() throws DojIsEmptyException;
 
@@ -1011,7 +1011,7 @@ public abstract class Doj implements Iterable<Doj> {
         public Doj getById(String id) {
             for (HtmlElement element : contextElements) {
                 try {
-                    HtmlElement elementWithId = element.getElementById(id);
+                    HtmlElement elementWithId = ((HtmlPage)element.getPage()).getHtmlElementById(id);
                     if (elementWithId != null) {
                         return on(elementWithId);
                     }
@@ -1033,7 +1033,7 @@ public abstract class Doj implements Iterable<Doj> {
         public Doj getByAttribute(String attribute, MatchType matchType, String value) {
             List<HtmlElement> list = new ArrayList<HtmlElement>();
             for (HtmlElement element : contextElements) {
-                for (HtmlElement child : element.getAllHtmlChildElements()) {
+                for (HtmlElement child : element.getHtmlElementDescendants()) {
                     if (matchType.isMatch(child.getAttribute(attribute), value)) {
                         list.add(child);
                     }
@@ -1316,6 +1316,9 @@ public abstract class Doj implements Iterable<Doj> {
                     ((HtmlTextArea) element).setText(value);
                 } else if ("select".equalsIgnoreCase(element.getTagName())) {
                     ((HtmlSelect) element).setSelectedAttribute(value, true);
+                    // bug in underlying htmlunit selected attribute is not added to the attribute map
+                    ((HtmlSelect)element).getOptionByValue(value).setAttribute("selected", "selected");
+
                 } else if ("button".equalsIgnoreCase(element.getTagName())) {
                     ((HtmlButton) element).setValueAttribute(value);
                 } else {
@@ -1372,7 +1375,7 @@ public abstract class Doj implements Iterable<Doj> {
         public Doj getByAttributeMatching(String attribute, Pattern pattern) {
             List<HtmlElement> list = new ArrayList<HtmlElement>();
             for (HtmlElement element : contextElements) {
-                for (HtmlElement child : element.getAllHtmlChildElements()) {
+                for (HtmlElement child : element.getHtmlElementDescendants()) {
                     if (pattern.matcher(child.getAttribute(attribute)).matches()) {
                         list.add(child);
                     }
@@ -1421,6 +1424,10 @@ public abstract class Doj implements Iterable<Doj> {
             Doj matches = this.withTag("option");
             for (HtmlElement option : matches.allElements()) {
                 Page temp = ((HtmlOption) option).setSelected(toSelect);
+                // bug in underlying htmlunit selected attribute is not added to the attribute map
+                if (toSelect) {
+                    option.setAttribute("selected", "selected");
+                }
                 if (page == null) {
                     page = temp;
                 }
