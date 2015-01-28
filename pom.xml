@@ -16,9 +16,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:svn:https://hue.googlecode.com/svn/trunk</connection>
-        <developerConnection>scm:svn:https://hue.googlecode.com/svn/trunk</developerConnection>
-        <url>http://code.google.com/p/hue/source/browse/</url>
+        <connection>scm:git:https://code.google.com/p/hue</connection>
+        <developerConnection>scm:git:https://code.google.com/p/huek</developerConnection>
+        <url>https://code.google.com/p/hue</url>
     </scm>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,6 +36,13 @@
             <organization>Roam</organization>
             <url>http://roam.be/</url>
             <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <name>James Winters</name>
+            <id>jwinters</id>
+            <email>james@jghd.co.uk</email>
+            <organization>JGHD</organization>
+            <url>http://www.jghd.co.uk//</url>
         </developer>
     </developers>
     <dependencies>
