@@ -17,7 +17,7 @@
     </licenses>
     <scm>
         <connection>scm:git:https://code.google.com/p/hue</connection>
-        <developerConnection>scm:git:https://code.google.com/p/huek</developerConnection>
+        <developerConnection>scm:git:https://code.google.com/p/hue</developerConnection>
         <url>https://code.google.com/p/hue</url>
     </scm>
     <properties>
