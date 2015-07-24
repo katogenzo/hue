@@ -1,0 +1,1 @@
+The Javadoc for the 1.1 release is available at http://hue.googlecode.com/svn/api/1.1/index.html
