@@ -17,16 +17,8 @@ package be.roam.hue.doj;
 
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.html.DomNode;
-import com.gargoylesoftware.htmlunit.html.HtmlButton;
-import com.gargoylesoftware.htmlunit.html.HtmlCheckBoxInput;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlInput;
-import com.gargoylesoftware.htmlunit.html.HtmlOption;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlRadioButtonInput;
-import com.gargoylesoftware.htmlunit.html.HtmlSelect;
-import com.gargoylesoftware.htmlunit.html.HtmlTextArea;
+import com.gargoylesoftware.htmlunit.html.*;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +28,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
-import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Node;
 import static be.roam.hue.doj.MatchType.*;
 
@@ -1025,7 +1016,8 @@ public abstract class Doj implements Iterable<Doj> {
         public Doj getByTag(String tag) {
             List<HtmlElement> list = new ArrayList<HtmlElement>();
             for (HtmlElement element : contextElements) {
-                list.addAll(element.getHtmlElementsByTagName(tag));
+                DomNodeList<HtmlElement> domList = element.getElementsByTagName(tag);
+                list.addAll(domList);
             }
             return on(list);
         }

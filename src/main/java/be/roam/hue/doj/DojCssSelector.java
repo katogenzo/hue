@@ -15,9 +15,10 @@
  */
 package be.roam.hue.doj;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Selector object and compiler for simple CSS selectors.

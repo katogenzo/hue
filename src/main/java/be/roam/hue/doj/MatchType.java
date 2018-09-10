@@ -15,7 +15,7 @@
  */
 package be.roam.hue.doj;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Enumeration of the possible match types for attribute selectors as defined
